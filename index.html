@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="assets/css/signin.css"  >
+        <script src="https://code.jquery.com/jquery.js"></script>
+
+    
+        <title>Don Kebab Santa Fe</title>
+      </head>
+      <body class="text-center bg">
+            <div class="card" style="width: 25rem; margin: 0 auto; float: none;">
+                    <div class="card-body">
+                        <form class="form-signin">
+                        <img class="mb-4" src="assets/images/logobanner.png" alt="" height="100px">
+                        <h1 class="h3 mb-3 font-weight-normal">Regístrate</h1>
+                        <label for="nombre" class="sr-only">Nombre</label>
+                        <input id="nombre" type="text" id="nombre" class="form-control downspace" placeholder="Nombre" required autofocus>
+                        <label  for="telefono" class="sr-only">Telefono</label>
+                        <input type="number" id="telefono" class="form-control downspace" placeholder="celular" required>
+                        
+                        <button id="new-user" class="btn btn-lg btn-dk btn-block" type="submit">Quiero Mi Kebab Gold Card</button>
+                        <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+                        </form>
+                    </div>
+            </div>    
+            
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+<script>
+
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyB6Qc7sKXFfP0OtslVZRO4j-u2GgJZ-KAs",
+                authDomain: "dkusers-aee65.firebaseapp.com",
+                databaseURL: "https://dkusers-aee65.firebaseio.com",
+                projectId: "dkusers-aee65",
+                storageBucket: "dkusers-aee65.appspot.com",
+                messagingSenderId: "790336825855"
+            };
+            firebase.initializeApp(config);
+            
+            var database = firebase.database();
+            var nombre = "";
+            var telefono = "";
+            var qrcode = "";
+            var visitas = "0";
+            var queryURL = "http://api.qrserver.com/v1/create-qr-code/?data=";
+
+             $("#new-user").on("click", function(event) {
+                event.preventDefault();
+                telefono = $("#telefono").val().trim();;
+                nombre = $("#nombre").val().trim();;
+                console.log(telefono);
+                console.log(nombre);
+
+                database.ref("/user").child(telefono).set({
+                        nombre: nombre,
+                        telefono: telefono,
+                        qrcode: qrcode,
+                        visitas: visitas,
+                        dateAdded: firebase.database.ServerValue.TIMESTAMP
+                        });
+
+                $.ajax({
+                    url: queryURL+telefono,
+                    method: "POST"
+                    }).then(function(response) {
+                    console.log(response.Response + response);
+                    if (response.Response == 'True'){
+                        database.ref("/user").child(telefono).set({
+                        nombre: nombre,
+                        telefono: telefono,
+                        qrcode: qrcode,
+                        visitas: visitas,
+                        dateAdded: firebase.database.ServerValue.TIMESTAMP
+                        });
+                    } else { alert('error')};
+                    });
+                
+                    
+                
+
+
+             });
+            
+            </script>
+            
+
+      </body>
+    </html>
