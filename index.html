@@ -51,8 +51,9 @@
             var telefono = "";
             var qrcode = "";
             var visitas = "0";
-            var queryURL = "http://api.qrserver.com/v1/create-qr-code/?data=";
-
+            var qrurl = "https://api.qrserver.com/v1/create-qr-code/?&data=";
+            var queryURL = "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=";
+            var mensajeQuery = "&message=";
              $("#new-user").on("click", function(event) {
                 event.preventDefault();
                 telefono = $("#telefono").val().trim();;
@@ -63,26 +64,25 @@
                 database.ref("/user").child(telefono).set({
                         nombre: nombre,
                         telefono: telefono,
-                        qrcode: qrcode,
+                        qrcode: qrurl+telefono,
                         visitas: visitas,
                         dateAdded: firebase.database.ServerValue.TIMESTAMP
                         });
 
+                var message = "Hola " + nombre + ' ya tienes tu Don Kebab Gratis da click aqui para ver tu código ';        
+
                 $.ajax({
-                    url: queryURL+telefono,
-                    method: "POST"
+                    url: queryURL+telefono+mensajeQuery+message,
+                    crossDomain: true,
+                    method: "GET"
                     }).then(function(response) {
-                    console.log(response.Response + response);
-                    if (response.Response == 'True'){
-                        database.ref("/user").child(telefono).set({
-                        nombre: nombre,
-                        telefono: telefono,
-                        qrcode: qrcode,
-                        visitas: visitas,
-                        dateAdded: firebase.database.ServerValue.TIMESTAMP
-                        });
-                    } else { alert('error')};
+                    console.log(response);
+                    if (response !== null ){
+                        
+                    } else { alert('error1')};
                     });
+
+                    //https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=5591958405&message=Hola
                 
                     
                 
