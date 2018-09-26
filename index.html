@@ -11,20 +11,20 @@
         <script src="https://code.jquery.com/jquery.js"></script>
 
     
-        <title>Don Kebab Santa Fe</title>
+        <title>Don Kebab Samara</title>
       </head>
       <body class="text-center bg">
-            <div class="card" style="width: 25rem; margin: 0 auto; float: none;">
-                    <div class="card-body">
-                        <form class="form-signin">
+            <div class="card" style="width: 25rem; margin: 0 auto; float: none; max-width: 80%;">
+                    <div id='content' class="card-body">
+                        <form id="form" class="form-signin">
                         <img class="mb-4" src="assets/images/logobanner.png" alt="" height="100px">
                         <h1 class="h3 mb-3 font-weight-normal">Regístrate</h1>
                         <label for="nombre" class="sr-only">Nombre</label>
                         <input id="nombre" type="text" id="nombre" class="form-control downspace" placeholder="Nombre" required autofocus>
                         <label  for="telefono" class="sr-only">Telefono</label>
-                        <input type="number" id="telefono" class="form-control downspace" placeholder="celular" required>
+                        <input type="number" id="telefono" class="form-control downspace" placeholder="Celular" required>
                         
-                        <button id="new-user" class="btn btn-lg btn-dk btn-block" type="submit">Quiero Mi Kebab Gold Card</button>
+                        <button id="new-user" class="btn btn-lg btn-dk btn-block" type="submit">Quiero Mi Kebab GRATIS</button>
                         <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
                         </form>
                     </div>
@@ -54,6 +54,9 @@
             var qrurl = "https://api.qrserver.com/v1/create-qr-code/?&data=";
             var queryURL = "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=";
             var mensajeQuery = "&message=";
+            var tinyUrl = 'www.dkb.mx?id=';
+            var tinyURLuser = '';
+
              $("#new-user").on("click", function(event) {
                 event.preventDefault();
                 telefono = $("#telefono").val().trim();;
@@ -61,27 +64,62 @@
                 console.log(telefono);
                 console.log(nombre);
 
-                database.ref("/user").child(telefono).set({
-                        nombre: nombre,
-                        telefono: telefono,
-                        qrcode: qrurl+telefono,
-                        visitas: visitas,
-                        dateAdded: firebase.database.ServerValue.TIMESTAMP
+                
+                if(telefono !== '' && nombre !== '' ){
+                    
+                    $.ajax({
+                        url: "https://api.rebrandly.com/v1/links",
+                        type: "post",
+                        data: JSON.stringify({
+                                "destination" : "https://donkebab.mx/samara/user.html?id="+telefono
+                            , "domain": { "fullName": "rebrand.ly" }
+                            //, "slashtag": "A_NEW_SLASHTAG"
+                            //, "title": "Rebrandly YouTube channel"
+                        }),
+                        headers: {
+                            "Content-Type": "application/json",
+                            "apikey": "dc3c27e22298400c98bc39295017b030"
+                            
+                        },
+                        dataType: "json",
+                        success: function (link) {
+                            console.log("Long URL was "+link.destination+", short URL is "+link.shortUrl);
+                            tinyURLuser = link.shortUrl;
+                            database.ref("/user").child(telefono).set({
+                            nombre: nombre,
+                            telefono: telefono,
+                            qrcode: qrurl+telefono,
+                            visitas: visitas,
+                            tinyURL: tinyURLuser,
+                            dateAdded: firebase.database.ServerValue.TIMESTAMP
+                            });
+                            var message = "Hola " + nombre + ' ya tienes tu Don Kebab Gratis da click aqui para ver tu codigo ' + tinyURLuser ;        
+
+                            $.ajax({
+                                url: queryURL+telefono+mensajeQuery+message,
+                                crossDomain: true,
+                                method: "GET"
+                                }).then(function(response) {
+                                console.log(response);
+                                if (response){
+                                    
+                                } else { alert('error1')};
+                                });
+                        }
                         });
 
-                var message = "Hola " + nombre + ' ya tienes tu Don Kebab Gratis da click aqui para ver tu código ';        
+                    
 
-                $.ajax({
-                    url: queryURL+telefono+mensajeQuery+message,
-                    crossDomain: true,
-                    method: "GET"
-                    }).then(function(response) {
-                    console.log(response);
-                    if (response !== null ){
-                        
-                    } else { alert('error1')};
-                    });
+                    
+                    
+                    
 
+                    $('#content').empty();
+                    $('#content').html('<h3>Gracias por registrarte<br>recibirás un SMS con tu código de descuento');
+
+                } else {
+                    alert('Llena los campos');
+                }
                     //https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=5591958405&message=Hola
                 
                     
