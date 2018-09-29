@@ -4,7 +4,7 @@
 <head>
 
   <meta charset="UTF-8">
-  <title>Sign-Up Today!</title>
+  <title>Ordenes Don Kebab</title>
 
   <!-- Bootstrap -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
@@ -21,6 +21,7 @@
     <!-- Jumbotron -->
     <div class="jumbotron">
       <h1 class="text-center">Ordenes Activas</h1>
+      <p class="text-center">notifica al cliente que ya esta lista su orden</p>
     </div>
     <div class="row">
 
@@ -92,9 +93,11 @@
             for(let ord in snapshot.child(phoneNumber).child("/Orders").val()){
                 if(snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa === true){
                     console.log(`${phoneNumber} : ${snapshot.child(phoneNumber).val().nombre} : OrderId = ${ord} : Activa = ${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}`);
-                    content = `<tr id=${phoneNumber}><td>${snapshot.child(phoneNumber).val().nombre}</td><td>${phoneNumber}</td><td>${ord}</td><td>${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}</td> <td><button class="ordenLista" value = ${phoneNumber} id = ${ord}>Orden Lista </button></td></tr>`
+                    content = `<tr id=${ord}${phoneNumber}><td>${snapshot.child(phoneNumber).val().nombre}</td><td>${phoneNumber}</td><td>${ord}</td><td>${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}</td> <td><button class="ordenLista" value = ${phoneNumber} orden = ${ord} >Orden Lista </button></td></tr>`
                     
                     $('#tableBody').append(content);
+                } else {
+                  
                 }
                 
             }
@@ -108,13 +111,17 @@
             event.preventDefault();
             var queryURL = "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=";
             var mensajeQuery = "&message=";
-            var message = "Tu orden de Don Kebab esta lista :)"
-            var telefono = $(this).attr("value")
+            var message = "Tu orden " + $(this).attr("orden") + " de Don Kebab esta lista :)";
+            var telefono = $(this).attr("value");
+          
             // console.log($(this).attr("value"));
             // console.log("hizo click")
-            database.child($(this).attr("value")).child("/Orders").child($(this).attr("id")).update({ activa:false})
-            
-            console.log(queryURL+telefono+mensajeQuery+message)
+            database.child($(this).attr("value")).child("/Orders").child($(this).attr("orden")).update({ activa:false});
+              var id= '#'+$(this).attr("orden")+$(this).attr("value");
+
+                  $(id).hide(1000);
+
+            console.log(queryURL+telefono+mensajeQuery+message);
             $.ajax({
                 url: queryURL+telefono+mensajeQuery+message,
                 crossDomain: true,
@@ -128,7 +135,7 @@
             
             setTimeout(function() {
                 location.reload();
-            }, 7000);
+            }, 100000);
             
 
         })
