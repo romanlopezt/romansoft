@@ -20,11 +20,11 @@
                         <img class="mb-4" src="assets/images/logobanner.png" alt="" height="100px">
                         <h1 class="h3 mb-3 font-weight-normal">Registrar Orden</h1>
                         <label  for="telefono" class="sr-only">Telefono</label>
-                        <input type="number" id="telefono" class="form-control" placeholder="Celular" required>
+                        <input type="number" name="telefono" id="telefono" class="form-control" placeholder="Celular" required autofocus>
                         <button id="gen-order" class="btn btn-lg btn-dk btn-block downspace" type="submit">Crear OrderId</button>
 
                         <label for="orden" class="sr-only">Orden</label>
-                        <input type="text" id="orden" class="form-control downspace" placeholder="OrderId" required autofocus>
+                        <input type="text" id="orden" class="form-control downspace" placeholder="OrderId" required >
 
 
                         <button id="new-order" class="btn btn-lg btn-dk btn-block" type="submit">Registrar Orden</button>
@@ -55,7 +55,7 @@
             var orden = ""; 
 
         $( document ).ready(function() {  
-
+            $('input[name=telefono]').focus();
 /*              function crearOrderId(phone){
                 
                  database.once("value")
@@ -132,6 +132,9 @@
                     //var message = "Hola " + nombre + ' ya tienes tu Don Kebab Gratis da click aqui para ver tu codigo ' + tinyURLuser ;        
                     $('#content').empty();
                     $('#content').html('<h3>Orden Registrada con éxito');
+                        setTimeout(function(){
+                            window.location.reload(1);
+                            }, 3000);
 
                 } else {
                     alert('Llena los campos');
