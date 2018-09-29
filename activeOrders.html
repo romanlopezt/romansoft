@@ -106,10 +106,31 @@
         
         $(document).on('click','.ordenLista',function(event) {
             event.preventDefault();
+            var queryURL = "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=";
+            var mensajeQuery = "&message=";
+            var message = "Tu orden de Don Kebab esta lista :)"
+            var telefono = $(this).attr("value")
             // console.log($(this).attr("value"));
             // console.log("hizo click")
             database.child($(this).attr("value")).child("/Orders").child($(this).attr("id")).update({ activa:false})
-            location.reload();
+            
+            console.log(queryURL+telefono+mensajeQuery+message)
+            $.ajax({
+                url: queryURL+telefono+mensajeQuery+message,
+                crossDomain: true,
+                method: "GET"
+                }).then(function(response) {
+                console.log(response);
+                if (response){
+                    
+                } else { alert('error1')};
+            });
+            
+            setTimeout(function() {
+                location.reload();
+            }, 7000);
+            
+
         })
     });
 
