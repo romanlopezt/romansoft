@@ -68,3 +68,9 @@ body, html {
 .downspace {
     margin-bottom: 15px;
 }
+
+#qr{
+  max-width: 60%;
+  text-align: center;
+  margin: 0 auto;
+}
