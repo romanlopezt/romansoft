@@ -68,7 +68,7 @@
                 database.once("value")
                 .then(function(snapshot) {
                     var tel = snapshot.child(telefono).val();
-                    
+                    //console.log(tel);
                     var arr = Object.keys(tel);
                     var buscar = snapshot.child(telefono).child("/Orders").child(orden).val()
                     
@@ -76,6 +76,18 @@
                     console.log("Orden activa: " + buscar.activa);
                     console.log("Fecha de Creacion: " + buscar.dateCreated);
                     console.log("Telefono: " + buscar.telefono);
+
+                    //console.log(snapshot.child(5591999851).child("/Orders").child(702).val())
+
+                    console.log("Aqui esta el super codigo para el query");
+
+                    for( let phoneNumber in snapshot.val()){
+                        for(let ord in snapshot.child(phoneNumber).child("/Orders").val()){
+                            if(snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa === true){
+                                console.log(`${phoneNumber} : OrderId = ${ord} : Activa = ${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}`);
+                            }
+                        }
+                    }
                     
                     // var arr2 =  Object.keys(buscar);
                     // console.log(arr2)
