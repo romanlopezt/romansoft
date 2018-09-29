@@ -92,14 +92,7 @@
             for(let ord in snapshot.child(phoneNumber).child("/Orders").val()){
                 if(snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa === true){
                     console.log(`${phoneNumber} : ${snapshot.child(phoneNumber).val().nombre} : OrderId = ${ord} : Activa = ${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}`);
-                    content = `<tr id=${phoneNumber}><td>${snapshot.child(phoneNumber).val().nombre}</td><td>${phoneNumber}</td><td>${ord}</td><td>${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}</td> <td><button class= "ordenLista" value = ${phoneNumber} id = ${ord}>Orden Lista </button></td></tr>`
-                    // var TaskTitle = snapshot.child(phoneNumber).val().nombre;
-                    // var telefono= phoneNumber;
-                    // content += '<tr id='+ phoneNumber +'>';
-                    // content += '<td>' + TaskTitle + '</td>'; //column1
-                    // content += '<td>' + phoneNumber + '</td>';//column2
-                    // content += '<td><button class="ordenLista" value="'+ phoneNumber +'">Orden Lista</button></td>',  
-                    // content += '</tr>'; 
+                    content = `<tr id=${phoneNumber}><td>${snapshot.child(phoneNumber).val().nombre}</td><td>${phoneNumber}</td><td>${ord}</td><td>${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}</td> <td><button class="ordenLista" value = ${phoneNumber} id = ${ord}>Orden Lista </button></td></tr>`
                     
                     $('#tableBody').append(content);
                 }
@@ -107,69 +100,22 @@
             }
             
         }
+        
       });
+      $(document).ready(function() {
+        
+        $(document).on('click','.ordenLista',function(event) {
+            event.preventDefault();
+            // console.log($(this).attr("value"));
+            // console.log("hizo click")
+            database.child($(this).attr("value")).child("/Orders").child($(this).attr("id")).update({ activa:false})
+            location.reload();
+        })
+    });
+
+ 
                 
-      //           $(".ordenLista").on("click", function(event) {
-      //           // Don't refresh the page!
-      //           event.preventDefault();
-      //           console.log($(this).attr("value"));
-      //           var id= '#'+$(this).attr("value");
 
-      //           $(id).hide();
-
-
-      // });
-
-//  database.ref("/user").once('value', function(snapshot){
-//     if(snapshot.exists()){
-//         var content = '';
-
-//         snapshot.forEach(function(data){
-//             var TaskTitle = data.val().nombre;
-//             var telefono= data.val().telefono;
-//             content += '<tr id='+ data.val().telefono+'>';
-//             content += '<td>' + TaskTitle + '</td>'; //column1
-//             content += '<td>' + telefono + '</td>';//column2
-//             content += '<td><button class="ordenLista" value="'+ data.val().telefono +'">Orden Lista</button></td>',  
-//             content += '</tr>';
-//         });
-
-//         $('#tableBody').append(content);
-//         $(".ordenLista").on("click", function(event) {
-//                 // Don't refresh the page!
-//                 event.preventDefault();
-//                 console.log($(this).attr("value"));
-//                 var id= '#'+$(this).attr("value");
-
-//                 $(id).hide();
-
-                
-                
-//                 });
-//     }
-// });
-
-// /*
-//         $('#tableBody').append('<tr>',
-//                     '<td>'+ snapshot.val().nombre +'</td>',
-//                     '<td>'+ snapshot.val().telefono +'</td>',
-//                     '<td>'+ snapshot.val().visitas +'</td>',
-//                     '<td>'+ moment(snapshot.val().date,'YYYY-MM-DD') +'</td>',
-//                     '<td></td>',
-//                     '<td></td>' ,  
-//                     '<td><button class="ordenLista" value="'+ snapshot.val().telefono +'">Orden Lista</button></td>',              
-//                   '</tr>');
-    
-// */
-    
-
-       
-// // If any errors are experienced, log them to console.
-// }, function(errorObject) {
-// console.log("The read failed: " + errorObject.code);
-// });
-
-    // Create Error Handling
 
      
 
