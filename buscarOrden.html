@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+        <link rel="stylesheet" href="assets/css/signin.css"  >
+        <script src="https://code.jquery.com/jquery.js"></script>
+
+    
+        <title>Don Kebab Samara</title>
+      </head>
+      <body class="text-center bg">
+            <div class="card" style="width: 25rem; margin: 0 auto; float: none; max-width: 80%;">
+                    <div id='content' class="card-body">
+                        <form id="form" class="form-signin">
+                        <img class="mb-4" src="assets/images/logobanner.png" alt="" height="100px">
+                        <h1 class="h3 mb-3 font-weight-normal">Buscar Orden</h1>
+                        <label  for="telefono" class="sr-only">Telefono</label>
+                        <input type="number" id="telefono" class="form-control" placeholder="Celular" required>
+
+                        <label for="orden" class="sr-only">Orden</label>
+                        <input type="text" id="orden" class="form-control downspace" placeholder="OrderId" required autofocus>
+
+
+                        <button id="find-order" class="btn btn-lg btn-dk btn-block" type="submit">Buscar Orden</button>
+                        <p class="mt-5 mb-3 text-muted">&copy; 2018-2019</p>
+                        </form>
+                    </div>
+            </div>    
+            
+
+
+<script src="https://www.gstatic.com/firebasejs/5.5.1/firebase.js"></script>
+<script>
+
+            // Initialize Firebase
+            var config = {
+                apiKey: "AIzaSyB6Qc7sKXFfP0OtslVZRO4j-u2GgJZ-KAs",
+                authDomain: "dkusers-aee65.firebaseapp.com",
+                databaseURL: "https://dkusers-aee65.firebaseio.com",
+                projectId: "dkusers-aee65",
+                storageBucket: "dkusers-aee65.appspot.com",
+                messagingSenderId: "790336825855"
+            };
+            firebase.initializeApp(config);
+            
+            var database = firebase.database().ref("user");
+            // var nombre = "";
+            var telefono = "";
+            var orden = ""; 
+
+        $( document ).ready(function() {  
+
+            alert("en telefono pon el mio 5591999851 y en orden pon la 702");
+
+
+             $("#find-order").on("click", function(event) {
+                event.preventDefault();
+                telefono = $("#telefono").val().trim();
+                orden = $('#orden').val().trim();
+                
+                alert("CHECA LA CONSOLA PARA VER LOS RESULTADOS")
+
+                database.once("value")
+                .then(function(snapshot) {
+                    var tel = snapshot.child(telefono).val();
+                    
+                    var arr = Object.keys(tel);
+                    var buscar = snapshot.child(telefono).child("/Orders").child(orden).val()
+                    
+                    console.log("OrderId: " + buscar.ordenId);
+                    console.log("Orden activa: " + buscar.activa);
+                    console.log("Fecha de Creacion: " + buscar.dateCreated);
+                    console.log("Telefono: " + buscar.telefono);
+                    
+                    // var arr2 =  Object.keys(buscar);
+                    // console.log(arr2)
+ 
+
+                 
+                }); 
+                
+                
+             
+             });
+     
+            
+
+       
+      
+        });
+            
+            </script>
+            
+
+      </body>
+    </html>
