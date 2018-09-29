@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="UTF-8">
+  <title>Sign-Up Today!</title>
+
+  <!-- Bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+    crossorigin="anonymous">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <br>
+
+    <!-- Jumbotron -->
+    <div class="jumbotron">
+      <h1 class="text-center">Ordenes Activas</h1>
+    </div>
+    <div class="row">
+
+      
+
+
+      <!-- Most Recent Member Card -->
+      <div class="col-lg-12">
+        <div class="card">
+          
+          <div class="card-body" id="recent-member">
+            <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Phone</th>
+                    <th scope="col">OrderId</th>
+                    <th scope="col">Active</th>
+                    <!--<th scope="col">Monthly Rate($)</th>
+                    <th scope="col">Total Billed($)</th>-->
+                  </tr>
+                </thead>
+                <tbody id="tableBody">
+                  
+                </tbody>
+            </table>      
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery.js"></script>
+
+  <!-- LINK TO FIREBASE GOES HERE -->
+  <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+  <script src="https://cdn.jsdelivr.net/momentjs/2.12.0/moment.min.js"></script>
+
+  <!-- Script -->
+  <script>
+    //  START CODING BELOW!!
+
+    // Initialize Firebase
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyB6Qc7sKXFfP0OtslVZRO4j-u2GgJZ-KAs",
+        authDomain: "dkusers-aee65.firebaseapp.com",
+        databaseURL: "https://dkusers-aee65.firebaseio.com",
+        projectId: "dkusers-aee65",
+        storageBucket: "dkusers-aee65.appspot.com",
+        messagingSenderId: "790336825855"
+    };
+    firebase.initializeApp(config);    
+    var database = firebase.database().ref("user");
+    var nombre = "";
+    var telefono = "";
+    var visitas = "";
+    var dateAdded = "";
+    
+
+    // Firebase watcher + initial loader HINT: .on("value")
+    database.once("value")
+      .then(function(snapshot) {
+        var content = "";
+        for( let phoneNumber in snapshot.val()){
+            for(let ord in snapshot.child(phoneNumber).child("/Orders").val()){
+                if(snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa === true){
+                    console.log(`${phoneNumber} : ${snapshot.child(phoneNumber).val().nombre} : OrderId = ${ord} : Activa = ${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}`);
+                    content = `<tr id=${phoneNumber}><td>${snapshot.child(phoneNumber).val().nombre}</td><td>${phoneNumber}</td><td>${ord}</td><td>${snapshot.child(phoneNumber).child("/Orders").child(ord).val().activa}</td> <td><button class="ordenLista" value = ${phoneNumber} id = ${ord}>Orden Lista </button></td></tr>`
+                    
+                    $('#tableBody').append(content);
+                }
+                
+            }
+            
+        }
+        
+      });
+      $(document).ready(function() {
+        
+        $(document).on('click','.ordenLista',function(event) {
+            event.preventDefault();
+            var queryURL = "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=romanlopezt&key=9ED89D7D-D4A5-73A3-6F02-8A0E66307C2E&to=";
+            var mensajeQuery = "&message=";
+            var message = "Tu orden de Don Kebab esta lista :)"
+            var telefono = $(this).attr("value")
+            // console.log($(this).attr("value"));
+            // console.log("hizo click")
+            database.child($(this).attr("value")).child("/Orders").child($(this).attr("id")).update({ activa:false})
+            
+            console.log(queryURL+telefono+mensajeQuery+message)
+            $.ajax({
+                url: queryURL+telefono+mensajeQuery+message,
+                crossDomain: true,
+                method: "GET"
+                }).then(function(response) {
+                console.log(response);
+                if (response){
+                    
+                } else { alert('error1')};
+            });
+            
+            setTimeout(function() {
+                location.reload();
+            }, 7000);
+            
+
+        })
+    });
+
+ 
+                
+
+
+     
+
+  </script>
+
+</body>
+
+</html>
